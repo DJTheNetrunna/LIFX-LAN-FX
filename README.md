@@ -13,7 +13,9 @@ No cloud API token is required. The controller discovers compatible LIFX bulbs o
 - Dozens of custom effects
 - Natural, energy, cyber, horror, experimental, and after-dark effect groups
 - Two-bulb choreography such as chase, clash, portal, and cross-pulse
-- Touch-friendly local web controller
+- Full-spectrum color wheel with brightness and white-temperature controls
+- Select and control individual bulbs or all lights together
+- Touch-friendly local web controller with discovery refresh and live status
 - No LIFX cloud token required
 
 ## Quick start on Fedora
