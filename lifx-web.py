@@ -5,6 +5,7 @@ from urllib.parse import parse_qs
 import html
 import os
 import subprocess
+import sys
 
 HOST = "127.0.0.1"
 PORT = 8080
@@ -43,7 +44,7 @@ def start_effect(effect):
     global current_process, current_effect
     stop_effect()
     current_process = subprocess.Popen(
-        ["python", ENGINE, effect],
+        [sys.executable, ENGINE, effect],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
@@ -53,7 +54,7 @@ def start_effect(effect):
 def lights_off():
     global current_effect
     stop_effect()
-    subprocess.Popen(["python", ENGINE, "off"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.Popen([sys.executable, ENGINE, "off"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     current_effect = "OFF"
 
 

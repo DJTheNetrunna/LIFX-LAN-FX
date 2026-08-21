@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import math
+import argparse
+import ipaddress
 import random
 import socket
 import struct
@@ -42,7 +44,19 @@ def discover(timeout=2.0):
     sock.bind(("", 0))
     packet = make_packet(2)
 
-    for addr in ("255.255.255.255", "192.168.0.255", "192.168.1.255", "10.0.0.255"):
+    broadcasts = {"255.255.255.255", "192.168.0.255", "192.168.1.255", "10.0.0.255"}
+    try:
+        hostname = socket.gethostname()
+        for info in socket.getaddrinfo(hostname, None, socket.AF_INET):
+            address = info[4][0]
+            if not address.startswith("127."):
+                # Most home LANs use /24 networks. Directed broadcasts improve
+                # discovery on Fedora systems with more than one interface.
+                broadcasts.add(str(ipaddress.ip_network(f"{address}/24", strict=False).broadcast_address))
+    except OSError:
+        pass
+
+    for addr in sorted(broadcasts):
         try:
             sock.sendto(packet, (addr, PORT))
         except OSError:
@@ -461,18 +475,31 @@ def show_effects():
 
 
 def main():
-    if len(sys.argv) < 2 or sys.argv[1].lower() in ("list", "help", "--help", "-h"):
+    parser = argparse.ArgumentParser(description="Local LIFX LAN effects controller")
+    parser.add_argument("effect", nargs="?", default="list", help="effect name, list, discover, or off")
+    parser.add_argument("--ip", action="append", dest="ips", help="bulb IP; repeat for multiple bulbs")
+    parser.add_argument("--timeout", type=float, default=2.0, help="discovery timeout in seconds")
+    args = parser.parse_args()
+
+    if args.effect.lower() in ("list", "help"):
         show_effects()
         return
 
-    effect = sys.argv[1].lower()
-    print("Searching for LIFX bulbs...")
-    devices = discover()
+    effect = args.effect.lower()
+    if args.ips:
+        devices = args.ips
+    else:
+        print("Searching for LIFX bulbs on the local network...")
+        devices = discover(args.timeout)
     if not devices:
-        print("No LIFX bulbs found. Make sure phone and bulb are on the same Wi-Fi.")
+        print("No LIFX bulbs found. Make sure this computer and the bulbs are on the same LAN.")
+        print("Try a known address: lifxfx EFFECT --ip 192.168.1.50")
         return
 
     print("Found:", ", ".join(devices))
+
+    if effect == "discover":
+        return
 
     if effect == "off":
         for ip in devices:
