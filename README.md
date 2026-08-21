@@ -1,12 +1,12 @@
 # LIFX-LAN-FX
 
-Local LIFX lighting effects for Android/Termux using the LIFX LAN protocol.
+Local LIFX lighting effects for the Fedora Linux console using the LIFX LAN protocol.
 
 No cloud API token is required. The controller discovers compatible LIFX bulbs on your local Wi-Fi and sends LIFX LAN packets directly over UDP.
 
 ## Features
 
-- Android + Termux friendly
+- Fedora console friendly
 - Pure Python standard library for the core controller
 - Automatic local bulb discovery
 - One- or multi-bulb support
@@ -16,23 +16,24 @@ No cloud API token is required. The controller discovers compatible LIFX bulbs o
 - Touch-friendly local web controller
 - No LIFX cloud token required
 
-## Quick start on Android
+## Quick start on Fedora
 
 ```bash
-pkg update
-pkg install python git -y
+sudo dnf install -y python3 git
 git clone https://github.com/DJTheNetrunna/LIFX-LAN-FX.git
 cd LIFX-LAN-FX
-python lifxfx.py list
-python lifxfx.py plasma
+./install-fedora.sh
+lifxfx list
+lifxfx discover
+lifxfx plasma
 ```
 
-Your phone and LIFX bulbs must be on the same local Wi-Fi network.
+Your Fedora computer and LIFX bulbs must be on the same local network.
 
 To launch the web controller:
 
 ```bash
-python lifx-web.py
+lifxfx-web
 ```
 
 Then open:
@@ -44,15 +45,15 @@ http://127.0.0.1:8080
 ## Example effects
 
 ```bash
-python lifxfx.py fire
-python lifxfx.py storm
-python lifxfx.py plasma
-python lifxfx.py awakening
-python lifxfx.py cyber
-python lifxfx.py haunted
-python lifxfx.py entropy
-python lifxfx.py redroom
-python lifxfx.py afterdark
+lifxfx fire
+lifxfx storm
+lifxfx plasma
+lifxfx awakening
+lifxfx cyber
+lifxfx haunted
+lifxfx entropy
+lifxfx redroom
+lifxfx afterdark
 ```
 
 Stop a looping effect with `Ctrl+C`.
@@ -60,7 +61,7 @@ Stop a looping effect with `Ctrl+C`.
 Turn discovered lights off with:
 
 ```bash
-python lifxfx.py off
+lifxfx off
 ```
 
 ## Safety
@@ -69,12 +70,12 @@ Some effects contain rapid brightness changes or flashing. Avoid strobe-like eff
 
 ## Compatibility
 
-The project targets color-capable LIFX bulbs that support the LIFX LAN protocol. It was initially developed and tested from Android/Termux against a full-color LIFX Mini.
+The project targets color-capable LIFX bulbs that support the LIFX LAN protocol. The controller uses only Python's standard library and does not require a cloud account or API token.
 
 ## Documentation
 
 - `docs/effects.md` — effect catalog
-- `docs/termux-setup.md` — Android/Termux setup
+- `docs/fedora-setup.md` — Fedora installation and troubleshooting
 
 ## Project layout
 
@@ -82,12 +83,13 @@ The project targets color-capable LIFX bulbs that support the LIFX LAN protocol.
 LIFX-LAN-FX/
 ├── lifxfx.py
 ├── lifx-web.py
+├── install-fedora.sh
 ├── README.md
 ├── LICENSE
 ├── .gitignore
 └── docs/
     ├── effects.md
-    └── termux-setup.md
+    └── fedora-setup.md
 ```
 
 ## Disclaimer
